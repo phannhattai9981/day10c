@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+
 @RestController
 @RequestMapping(value = "/book")
 public class BookController {
@@ -45,20 +47,40 @@ public class BookController {
         return result;
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public Object updateBook(@RequestBody BookEntity updateBook) {
-        BookEntity result = bookRepository.findById(updateBook.getId()).get();
-        if (result == null) {
-            Map<String, String> error = new HashMap<String, String>() {
-                {
-                    put("Error", updateBook.getId() + " not exist");
-                }
-            };
-            return error;
+//    @RequestMapping(method = RequestMethod.PUT)
+//    public Object updateBook(@RequestBody BookEntity updateBook) {
+//        BookEntity result = bookRepository.findById(updateBook.getId()).get();
+//        if (result == null) {
+//            Map<String, String> error = new HashMap<String, String>() {
+//                {
+//                    put("Error", updateBook.getId() + " not exist");
+//                }
+//            };
+//            return error;
+//        }
+//        result = updateBook;
+//        bookRepository.save(result);
+//        return result;
+//    }
+    @RequestMapping(method = PUT)
+    public Object update(@RequestBody BookEntity updateBookEntity) {
+        BookEntity bookUpdate = null;
+        for (BookEntity bookEntity : bookRepository.findAll()) {
+            if (bookEntity.getId() == updateBookEntity.getId()) {
+                bookUpdate = bookEntity;
+                break;
+            }
         }
-        result = updateBook;
-        bookRepository.save(result);
-        return result;
+
+        if (bookUpdate == null) {
+            Map<String, String> error = new HashMap<String, String>() {{
+                put("error", updateBookEntity.getId() + "does not exist");
+            }};
+            return error;
+        } else {
+            BookEntity book= bookRepository.save(updateBookEntity);
+            return book;
+        }
     }
 
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
