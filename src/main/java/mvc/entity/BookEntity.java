@@ -1,41 +1,24 @@
 package mvc.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 
 @Entity
-@Table (name = "book")
+@Table(name = "book")
 public class BookEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name = "id")
     private int id;
- //   @NotEmpty
+
+
     @Column (name = "name")
     private String name;
 
+
     @Column (name = "author")
     private String author;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn (name = "categoryId")
-    private CategoryEntity category;
-
-    @OneToOne(cascade = {CascadeType.ALL})
-    @PrimaryKeyJoinColumn
-    private BookDetailsEntity bookDetails;
-
-    public BookEntity(int id, String name, String author, CategoryEntity category, BookDetailsEntity bookDetails) {
-        this.id = id;
-        this.name = name;
-        this.author = author;
-        this.category = category;
-        this.bookDetails = bookDetails;
-    }
-
-    public BookEntity() {
-
-    }
+    @Column(name = "price")
+    private double price;
 
     public int getId() {
         return id;
@@ -61,32 +44,11 @@ public class BookEntity {
         this.author = author;
     }
 
-    public CategoryEntity getCategory() {
-        return category;
+    public double getPrice() {
+        return price;
     }
 
-    public void setCategory(CategoryEntity category) {
-        this.category = category;
-    }
-
-    public BookDetailsEntity getBookDetails() {
-        return bookDetails;
-    }
-
-    public void setBookDetails(BookDetailsEntity bookDetails) {
-        this.bookDetails = bookDetails;
-    }
-
-    @Override
-    public String toString() {
-        return "BookEntity{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", author='" + author + '\'' +
-                ", category=" + category +
-                ", bookDetails=" + bookDetails +
-                '}';
+    public void setPrice(double price) {
+        this.price = price;
     }
 }
-
-
